@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:munit="http://www.mulesoft.org/schema/mule/munit"
+	xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<munit:config name="withDraw-suite.xml" />
+	<munit:test name="withDrawSub_Flow-Success" doc:id="a870af42-588a-4c05-a237-6fcdf1bbb037" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Send" doc:id="c11c15fe-ece6-45d3-ac73-88245cbd38ce" processor="email:send">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="0d7e371c-86be-4de2-b1f8-082c8f0bafcb" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/java --- readUrl('classpath://withDrawSubFlowSuccess\mock_payload.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://withDrawSubFlowSuccess\mock_variable_.dwl')]" />
+						<munit-tools:variable key="atmTrans" value="#[output application/json --- readUrl('classpath://withDrawSubFlowSuccess\mock_variable_1.dwl')]" mediaType="application/json" encoding="UTF-8" />
+						<munit-tools:variable key="idr" value="#[output application/java --- readUrl('classpath://withDrawSubFlowSuccess\mock_variable_2.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="hab" value="#[output application/java --- readUrl('classpath://withDrawSubFlowSuccess\mock_variable_3.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="atmQpar" value="#[output application/json --- readUrl('classpath://withDrawSubFlowSuccess\mock_variable_4.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock Update" doc:id="9e737a6d-8d15-40f2-abe6-144ef64c11f9" processor="db:update">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="60799416-e675-4bc1-ae4b-fe39449f7791" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/java --- readUrl('classpath://withDrawSubFlowSuccess\mock_payload1.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://withDrawSubFlowSuccess\mock_variable_5.dwl')]" />
+						<munit-tools:variable key="atmTrans" value="#[output application/json --- readUrl('classpath://withDrawSubFlowSuccess\mock_variable_6.dwl')]" mediaType="application/json" encoding="UTF-8" />
+						<munit-tools:variable key="idr" value="#[output application/java --- readUrl('classpath://withDrawSubFlowSuccess\mock_variable_7.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="hab" value="#[output application/java --- readUrl('classpath://withDrawSubFlowSuccess\mock_variable_8.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="atmQpar" value="#[output application/json --- readUrl('classpath://withDrawSubFlowSuccess\mock_variable_9.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock Flow Reference" doc:id="b842e97a-2bc9-4a87-bbbc-e9184b74ec31" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="14821792-e1c3-48b4-b22f-63a828d881d0" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/json --- readUrl('classpath://withDrawSubFlowSuccess\mock_payload2.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://withDrawSubFlowSuccess\mock_variable_10.dwl')]" />
+						<munit-tools:variable key="atmTrans" value="#[output application/json --- readUrl('classpath://withDrawSubFlowSuccess\mock_variable_11.dwl')]" mediaType="application/json" encoding="UTF-8" />
+						<munit-tools:variable key="hab" value="#[output application/java --- readUrl('classpath://withDrawSubFlowSuccess\mock_variable_12.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="atmQpar" value="#[output application/json --- readUrl('classpath://withDrawSubFlowSuccess\mock_variable_13.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="7efabc3f-c5af-43aa-9e92-cc021b91d83a" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://withDrawSubFlowSuccess\set-event_payload.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				<munit:attributes value="#[readUrl('classpath://withDrawSubFlowSuccess\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://withDrawSubFlowSuccess\set-event_variable_.dwl')]" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to withDrawSub_Flow" doc:id="2ca45de5-35b1-41f6-beb1-48d8a70d2b21" name="withDrawSub_Flow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="69671a25-ab00-45b5-a0f2-03c05b83a842" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import withDrawSubFlowSuccess::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="withDrawSub_Flow-Fail" doc:id="4346d2de-8376-45bf-bc6c-8943409e0b0c" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Send" doc:id="fe71dfd9-7404-46c0-a1ba-245fcf48db2a" processor="email:send">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="0e1da531-27ac-49db-bc05-dfd1af072429" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/java --- readUrl('classpath://withDrawSubFlowFail\mock_payload.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://withDrawSubFlowFail\mock_variable_.dwl')]" />
+						<munit-tools:variable key="atmTrans" value="#[output application/json --- readUrl('classpath://withDrawSubFlowFail\mock_variable_1.dwl')]" mediaType="application/json" encoding="UTF-8" />
+						<munit-tools:variable key="hab" value="#[output application/java --- readUrl('classpath://withDrawSubFlowFail\mock_variable_2.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="atmQpar" value="#[output application/json --- readUrl('classpath://withDrawSubFlowFail\mock_variable_3.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock Flow Reference" doc:id="3d52fac0-4868-4ce4-9bbb-965d687d4e59" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="14821792-e1c3-48b4-b22f-63a828d881d0" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/json --- readUrl('classpath://withDrawSubFlowFail\mock_payload1.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://withDrawSubFlowFail\mock_variable_4.dwl')]" />
+						<munit-tools:variable key="atmTrans" value="#[output application/json --- readUrl('classpath://withDrawSubFlowFail\mock_variable_5.dwl')]" mediaType="application/json" encoding="UTF-8" />
+						<munit-tools:variable key="hab" value="#[output application/java --- readUrl('classpath://withDrawSubFlowFail\mock_variable_6.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="atmQpar" value="#[output application/json --- readUrl('classpath://withDrawSubFlowFail\mock_variable_7.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="9fc90116-7424-4912-9bc8-e34c7e174fcc" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://withDrawSubFlowFail\set-event_payload.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				<munit:attributes value="#[readUrl('classpath://withDrawSubFlowFail\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://withDrawSubFlowFail\set-event_variable_.dwl')]" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to withDrawSub_Flow" doc:id="b7f095e5-6fbd-42c9-9708-94a195375dee" name="withDrawSub_Flow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="a1f3f783-c062-4773-89d1-1b9f622fa3c5" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import withDrawSubFlowFail::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+	
+		<munit:test name="withDrawSub_Flow-Error" doc:id="a870af42-588a-4c05-a237-6fcdf1bbb037" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Send" doc:id="c11c15fe-ece6-45d3-ac73-88245cbd38ce" processor="email:send">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="0d7e371c-86be-4de2-b1f8-082c8f0bafcb" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/java --- readUrl('classpath://withDrawSubFlowSuccess\mock_payload.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://withDrawSubFlowSuccess\mock_variable_.dwl')]" />
+						<munit-tools:variable key="atmTrans" value="#[output application/json --- readUrl('classpath://withDrawSubFlowSuccess\mock_variable_1.dwl')]" mediaType="application/json" encoding="UTF-8" />
+						<munit-tools:variable key="idr" value="#[output application/java --- readUrl('classpath://withDrawSubFlowSuccess\mock_variable_2.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="hab" value="#[output application/java --- readUrl('classpath://withDrawSubFlowSuccess\mock_variable_3.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="atmQpar" value="#[output application/json --- readUrl('classpath://withDrawSubFlowSuccess\mock_variable_4.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock Update" doc:id="9e737a6d-8d15-40f2-abe6-144ef64c11f9" processor="db:update">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="60799416-e675-4bc1-ae4b-fe39449f7791" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					
+					<munit-tools:error typeId="ANY" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://withDrawSubFlowSuccess\mock_variable_5.dwl')]" />
+						<munit-tools:variable key="atmTrans" value="#[output application/json --- readUrl('classpath://withDrawSubFlowSuccess\mock_variable_6.dwl')]" mediaType="application/json" encoding="UTF-8" />
+						<munit-tools:variable key="idr" value="#[output application/java --- readUrl('classpath://withDrawSubFlowSuccess\mock_variable_7.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="hab" value="#[output application/java --- readUrl('classpath://withDrawSubFlowSuccess\mock_variable_8.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="atmQpar" value="#[output application/json --- readUrl('classpath://withDrawSubFlowSuccess\mock_variable_9.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			
+</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock Flow Reference" doc:id="b842e97a-2bc9-4a87-bbbc-e9184b74ec31" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="14821792-e1c3-48b4-b22f-63a828d881d0" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/json --- readUrl('classpath://withDrawSubFlowSuccess\mock_payload2.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://withDrawSubFlowSuccess\mock_variable_10.dwl')]" />
+						<munit-tools:variable key="atmTrans" value="#[output application/json --- readUrl('classpath://withDrawSubFlowSuccess\mock_variable_11.dwl')]" mediaType="application/json" encoding="UTF-8" />
+						<munit-tools:variable key="hab" value="#[output application/java --- readUrl('classpath://withDrawSubFlowSuccess\mock_variable_12.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="atmQpar" value="#[output application/json --- readUrl('classpath://withDrawSubFlowSuccess\mock_variable_13.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="7efabc3f-c5af-43aa-9e92-cc021b91d83a" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://withDrawSubFlowSuccess\set-event_payload.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				<munit:attributes value="#[readUrl('classpath://withDrawSubFlowSuccess\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://withDrawSubFlowSuccess\set-event_variable_.dwl')]" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution>
+			<try doc:name="Try" doc:id="0d6f276a-f532-48dd-a197-ace8f0382eee" >
+				<flow-ref doc:name="Flow-ref to withDrawSub_Flow" doc:id="2ca45de5-35b1-41f6-beb1-48d8a70d2b21" name="withDrawSub_Flow" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="94ac16ec-ac6d-42f2-b9a3-2f980cad012b" >
+						<logger level="INFO" doc:name="Logger" doc:id="84304c98-3261-414a-9e7a-a4c0d38fdff1" message="onErrorcontinue"/>
+					</on-error-continue>
+				</error-handler>
+			</try>
+
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that doc:name="Assert that" doc:id="0a30d92e-419c-4160-8e33-4c40c944e1a8" expression="#[error]" is="#[MunitTools::equalTo(error.description)]"/>
+			<ee:transform doc:name="Transform Message" doc:id="0c38fedf-0a7b-45d6-a160-9f38c87bc6da" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+
+import * from dw::Runtime
+
+output application/json
+
+---
+
+{ "user" : 1 } wait 60000]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+
+		</munit:validation>
+	
+</munit:test>
+
+
+</mule>

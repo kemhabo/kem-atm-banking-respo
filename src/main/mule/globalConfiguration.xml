@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway"
+	xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties"
+	xmlns:s3="http://www.mulesoft.org/schema/mule/s3"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:email="http://www.mulesoft.org/schema/mule/email" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd 
+http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd 
+http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd 
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/s3 http://www.mulesoft.org/schema/mule/s3/current/mule-s3.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd
+http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd">
+    <http:listener-config name="atm-transaction-httpListenerConfig">
+        <http:listener-connection host="0.0.0.0" port="${http.port}" />
+    </http:listener-config>
+    <apikit:config name="atm-transaction-config" api="atm-transaction.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <configuration doc:name="Configuration" doc:id="f909029f-c26f-495d-9f80-2050c2169023" defaultErrorHandler-ref="errorHandlingGlobalError_Handler" />
+	
+	<db:config name="Database_Config" doc:name="Database Config" doc:id="2b9e123c-2799-4c9b-8e1b-0c359c81f51d" >
+		<db:my-sql-connection host="${secure::db.hostd}" port="${secure::db.portd}" user="${secure::db.userd}" password="${secure::db.passwordd}" database="muletrainingdb" />
+	</db:config>
+	<s3:config name="Amazon_S3_Configuration" doc:name="Amazon S3 Configuration" doc:id="2d58ca7a-060d-4c9d-af2f-afb973747ad7" >
+		<s3:basic-connection accessKey="${secure::S3.accesskey}" secretKey="${secure::S3.secretkey}"/>
+	</s3:config>
+	<email:smtp-config name="Email_SMTP" doc:name="Email SMTP" doc:id="ce717cc1-fe3b-437f-91e2-0de56f806e98" >
+		<email:smtp-connection host="${secure::email.hoste}" port="${secure::email.porte}" user="${secure::email.usere}" password="${secure::email.passworde}" >
+			<email:properties >
+				<email:property key="mail.smtp.starttls.enable" value="true" />
+			</email:properties>
+		</email:smtp-connection>
+	</email:smtp-config>
+	<configuration-properties doc:name="Configuration properties" doc:id="9f97a04a-cccd-4d7c-801b-ba98a3fc39c7" file="${env}.yaml" />
+	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="4e0ad971-fd9f-4aad-9622-9a1a0d399cad" file="${env}.yaml" key="${secure.key}" />
+	<api-gateway:autodiscovery apiId="${api.id}" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="ab885158-12a3-43a9-ab1a-9e205bd5d246" flowRef="atm-transaction-main" />	
+
+</mule>

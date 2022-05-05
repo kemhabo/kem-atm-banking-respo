@@ -1,0 +1,1 @@
+"This is to inform you that Your Account has been debited with 2000 amount and your Total Balance is 107111"

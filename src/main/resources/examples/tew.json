@@ -1,0 +1,10 @@
+
+  {
+    "pk": 14,
+    "custAccNum": "2777333455",
+    "bankName": "ICICI",
+    "accountStatus": "Active",
+    "totalBalance": 2000,
+    "atmPin": "1234",
+    "wrongPin": "7721"
+  }

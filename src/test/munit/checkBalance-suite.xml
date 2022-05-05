@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="checkBalance-suite.xml" />
+	<munit:test name="checkBalanceSub_Flow-Fail(wrongPin)" doc:id="abb8ab2e-35e9-4231-b97e-c0d4e88aca99">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Update" doc:id="e954608e-0ecd-4a2f-bc86-3c4c007aa032" processor="db:update">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="c045ba7b-81e9-446c-8495-3e9ceb72c840" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/java --- readUrl('classpath://checkBalanceSubFlowFailwrongPin\mock_payload.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://checkBalanceSubFlowFailwrongPin\mock_variable_.dwl')]" />
+						<munit-tools:variable key="atmTrans" value="#[output application/json --- readUrl('classpath://checkBalanceSubFlowFailwrongPin\mock_variable_1.dwl')]" mediaType="application/json" encoding="UTF-8" />
+						<munit-tools:variable key="hab" value="#[output application/java --- readUrl('classpath://checkBalanceSubFlowFailwrongPin\mock_variable_2.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="atmQpar" value="#[output application/json --- readUrl('classpath://checkBalanceSubFlowFailwrongPin\mock_variable_3.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock Flow Reference" doc:id="e2d5d245-7026-4bc7-98c1-dd10953c1a9c" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="28d196c7-d74d-4ff1-9777-49be3e7193e5" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/java --- readUrl('classpath://checkBalanceSubFlowFailwrongPin\mock_payload1.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://checkBalanceSubFlowFailwrongPin\mock_variable_4.dwl')]" />
+						<munit-tools:variable key="atmTrans" value="#[output application/json --- readUrl('classpath://checkBalanceSubFlowFailwrongPin\mock_variable_5.dwl')]" mediaType="application/json" encoding="UTF-8" />
+						<munit-tools:variable key="hab" value="#[output application/java --- readUrl('classpath://checkBalanceSubFlowFailwrongPin\mock_variable_6.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="atmQpar" value="#[output application/json --- readUrl('classpath://checkBalanceSubFlowFailwrongPin\mock_variable_7.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock Send" doc:id="ad794649-5b7c-4df4-b0a7-8e603ccceea4" processor="email:send">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="27eb5ced-7297-4274-974b-e5392d7cd56c" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/java --- readUrl('classpath://checkBalanceSubFlowFailwrongPin\mock_payload2.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://checkBalanceSubFlowFailwrongPin\mock_variable_8.dwl')]" />
+						<munit-tools:variable key="atmTrans" value="#[output application/json --- readUrl('classpath://checkBalanceSubFlowFailwrongPin\mock_variable_9.dwl')]" mediaType="application/json" encoding="UTF-8" />
+						<munit-tools:variable key="hab" value="#[output application/java --- readUrl('classpath://checkBalanceSubFlowFailwrongPin\mock_variable_10.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="atmQpar" value="#[output application/json --- readUrl('classpath://checkBalanceSubFlowFailwrongPin\mock_variable_11.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="e41b4d79-a724-457f-b750-9da16da7598a" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://checkBalanceSubFlowFailwrongPin\set-event_payload.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				<munit:attributes value="#[readUrl('classpath://checkBalanceSubFlowFailwrongPin\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://checkBalanceSubFlowFailwrongPin\set-event_variable_.dwl')]" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to checkBalanceSub_Flow" doc:id="1033918b-a583-44bc-855e-cccafaeb8573" name="checkBalanceSub_Flow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="1f84a0d6-18ff-46b0-8e6e-9b91ce4bd43d" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+output application/dw onlyData=true
+import checkBalanceSubFlowFailwrongPin::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="checkBalanceSub_Flow-fail(blocked)" doc:id="146db1d0-f4ae-45f7-b68e-d2a3285c4f5e" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Send" doc:id="1aa71791-1775-43aa-b297-e8556a53ea5b" processor="email:send">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="32d1fdac-c443-4972-b512-47e2a03d1900" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/json --- readUrl('classpath://checkBalanceSubFlowfailblocked\mock_payload.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://checkBalanceSubFlowfailblocked\mock_variable_.dwl')]" />
+						<munit-tools:variable key="atmTrans" value="#[output application/json --- readUrl('classpath://checkBalanceSubFlowfailblocked\mock_variable_1.dwl')]" mediaType="application/json" encoding="UTF-8" />
+						<munit-tools:variable key="hab" value="#[output application/java --- readUrl('classpath://checkBalanceSubFlowfailblocked\mock_variable_2.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="atmQpar" value="#[output application/json --- readUrl('classpath://checkBalanceSubFlowfailblocked\mock_variable_3.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock Flow Reference" doc:id="242039dd-44eb-4d2b-9876-5ecc3a406e4d" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="28d196c7-d74d-4ff1-9777-49be3e7193e5" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/java --- readUrl('classpath://checkBalanceSubFlowfailblocked\mock_payload1.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://checkBalanceSubFlowfailblocked\mock_variable_4.dwl')]" />
+						<munit-tools:variable key="atmTrans" value="#[output application/json --- readUrl('classpath://checkBalanceSubFlowfailblocked\mock_variable_5.dwl')]" mediaType="application/json" encoding="UTF-8" />
+						<munit-tools:variable key="hab" value="#[output application/java --- readUrl('classpath://checkBalanceSubFlowfailblocked\mock_variable_6.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="atmQpar" value="#[output application/json --- readUrl('classpath://checkBalanceSubFlowfailblocked\mock_variable_7.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="2d890aa4-a531-4ead-bf4a-8c20d9d69901" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://checkBalanceSubFlowfailblocked\set-event_payload.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				<munit:attributes value="#[readUrl('classpath://checkBalanceSubFlowfailblocked\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://checkBalanceSubFlowfailblocked\set-event_variable_.dwl')]" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to checkBalanceSub_Flow" doc:id="62825c17-b456-4b76-9c50-75e25a29ebd7" name="checkBalanceSub_Flow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="d427306f-14b0-4849-8ebe-b05d3949272f" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import checkBalanceSubFlowfailblocked::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="checkBalanceSub_Flow-Success" doc:id="5f43c8fe-a405-4d83-ab89-b99c502ac651" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Flow Reference" doc:id="f60cb1ba-be15-40d6-9f1e-f17dbb878820" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="28d196c7-d74d-4ff1-9777-49be3e7193e5" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/java --- readUrl('classpath://checkBalanceSubFlowSuccess\mock_payload.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://checkBalanceSubFlowSuccess\mock_variable_.dwl')]" />
+						<munit-tools:variable key="atmTrans" value="#[output application/json --- readUrl('classpath://checkBalanceSubFlowSuccess\mock_variable_1.dwl')]" mediaType="application/json" encoding="UTF-8" />
+						<munit-tools:variable key="hab" value="#[output application/java --- readUrl('classpath://checkBalanceSubFlowSuccess\mock_variable_2.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="atmQpar" value="#[output application/json --- readUrl('classpath://checkBalanceSubFlowSuccess\mock_variable_3.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="fe01383b-e33c-4660-a3f9-5c9edaba3ea9" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://checkBalanceSubFlowSuccess\set-event_payload.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				<munit:attributes value="#[readUrl('classpath://checkBalanceSubFlowSuccess\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://checkBalanceSubFlowSuccess\set-event_variable_.dwl')]" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to checkBalanceSub_Flow" doc:id="0f6f0d5c-6ee5-46d1-bbed-f0bb54487564" name="checkBalanceSub_Flow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="9ea21604-1ab1-4f73-8140-2a9654b7ec8b" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import checkBalanceSubFlowSuccess::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+	
+	<munit:test name="checkBalanceSub_Flow-Error" doc:id="abb8ab2e-35e9-4231-b97e-c0d4e88aca99">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Update" doc:id="e954608e-0ecd-4a2f-bc86-3c4c007aa032" processor="db:update">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="c045ba7b-81e9-446c-8495-3e9ceb72c840" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					
+					<munit-tools:error typeId="ANY" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://checkBalanceSubFlowFailwrongPin\mock_variable_.dwl')]" />
+						<munit-tools:variable key="atmTrans" value="#[output application/json --- readUrl('classpath://checkBalanceSubFlowFailwrongPin\mock_variable_1.dwl')]" mediaType="application/json" encoding="UTF-8" />
+						<munit-tools:variable key="hab" value="#[output application/java --- readUrl('classpath://checkBalanceSubFlowFailwrongPin\mock_variable_2.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="atmQpar" value="#[output application/json --- readUrl('classpath://checkBalanceSubFlowFailwrongPin\mock_variable_3.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			
+</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock Flow Reference" doc:id="e2d5d245-7026-4bc7-98c1-dd10953c1a9c" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="28d196c7-d74d-4ff1-9777-49be3e7193e5" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/java --- readUrl('classpath://checkBalanceSubFlowFailwrongPin\mock_payload1.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://checkBalanceSubFlowFailwrongPin\mock_variable_4.dwl')]" />
+						<munit-tools:variable key="atmTrans" value="#[output application/json --- readUrl('classpath://checkBalanceSubFlowFailwrongPin\mock_variable_5.dwl')]" mediaType="application/json" encoding="UTF-8" />
+						<munit-tools:variable key="hab" value="#[output application/java --- readUrl('classpath://checkBalanceSubFlowFailwrongPin\mock_variable_6.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="atmQpar" value="#[output application/json --- readUrl('classpath://checkBalanceSubFlowFailwrongPin\mock_variable_7.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock Send" doc:id="ad794649-5b7c-4df4-b0a7-8e603ccceea4" processor="email:send">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="27eb5ced-7297-4274-974b-e5392d7cd56c" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/java --- readUrl('classpath://checkBalanceSubFlowFailwrongPin\mock_payload2.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://checkBalanceSubFlowFailwrongPin\mock_variable_8.dwl')]" />
+						<munit-tools:variable key="atmTrans" value="#[output application/json --- readUrl('classpath://checkBalanceSubFlowFailwrongPin\mock_variable_9.dwl')]" mediaType="application/json" encoding="UTF-8" />
+						<munit-tools:variable key="hab" value="#[output application/java --- readUrl('classpath://checkBalanceSubFlowFailwrongPin\mock_variable_10.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="atmQpar" value="#[output application/json --- readUrl('classpath://checkBalanceSubFlowFailwrongPin\mock_variable_11.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="e41b4d79-a724-457f-b750-9da16da7598a" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://checkBalanceSubFlowFailwrongPin\set-event_payload.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				<munit:attributes value="#[readUrl('classpath://checkBalanceSubFlowFailwrongPin\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://checkBalanceSubFlowFailwrongPin\set-event_variable_.dwl')]" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution>
+			<try doc:name="Try" doc:id="23a100ef-8d73-4649-aac1-64d6972f09b3" >
+				<flow-ref doc:name="Flow-ref to checkBalanceSub_Flow" doc:id="1033918b-a583-44bc-855e-cccafaeb8573" name="checkBalanceSub_Flow" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="98988741-1a8e-466e-acbe-546ea30ecdff" >
+						<logger level="TRACE" doc:name="Logger" doc:id="96dea081-805a-4a8d-88b7-be4c6e16c4fc" message="onErrorContinue"/>
+					</on-error-continue>
+				</error-handler>
+			</try>
+
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that doc:name="Assert that" doc:id="dd490daf-e75d-4fca-835e-732dbffc797f" expression="#[error]" is="#[MunitTools::equalTo(error.description)]"/>
+
+		</munit:validation>
+	
+</munit:test>	
+
+
+</mule>

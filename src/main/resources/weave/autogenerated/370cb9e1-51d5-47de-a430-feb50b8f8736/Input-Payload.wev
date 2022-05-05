@@ -1,0 +1,9 @@
+%dw 2.0
+
+type auto_370cb9e1_51d5_47de_a430_feb50b8f8736_Input_Payload = {
+  atmPin: String, 
+  amountToBeWithDraw: Number, 
+  accountNum: String, 
+  _?: Any
+}
+

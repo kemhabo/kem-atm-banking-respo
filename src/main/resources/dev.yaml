@@ -1,0 +1,21 @@
+http:
+   port: "8081"
+   path: "![OY11J9tgkUst7aYYoE9TJg==]"
+   
+db:
+  hostd: "![YClvvaR6qTQyCey4wiR9Jj67QHAbugjZujGFSB9G95ci+wIqEipzlP/SXW8n2Y9qK+Sc7iQOhXELhEm1L9tj4g==]" 
+  portd: "![R/S53XZAZvmacR9uVfwPvw==]" 
+  userd: "![gxIGKGypfFIuJAY7yirNsw==]" 
+  passwordd: "![YuDslW3sjjfrhVpUyt/6yw==]" 
+  database: "muletrainingdb"
+  
+email:
+    hoste: "![02JJKTsAGv0HX89mrMvvcg==]" 
+    porte: "![6IKtpC0SldZ/n8K28TbB+g==]" 
+    usere: "![8qwApt3V5eErb3xfvzSvMUiSWXNio3ZeKLdHGdSUOPM=]"
+    passworde: "![qhWaYY4/TQH5YM37pKv04Q==]"
+    
+S3: 
+ accesskey: "![0MD6TA6MjzlCvOjELsyzYfLnVZd8aEqu8ECkmuhnWZo=]" 
+ secretkey: "![X1WBZM3FfwaASSfkj6V8qk0J7vkNThkIX7PRLYngbPYDQeofPfPIERvQz7ITluXv]"
+ region Endpoint: "US_EAST_1"

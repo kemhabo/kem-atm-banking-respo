@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="select-parmFlow" doc:id="9cb763de-8f87-4c50-940a-d9bac9db1310" >
+		<try doc:name="Try" doc:id="4b868c1f-b4d0-45d0-851b-dea48949d9d1" >
+			<db:select doc:name="Select" doc:id="26e965f5-5f3f-4268-b1bf-baca322b7cef" config-ref="Database_Config">
+			<db:sql><![CDATA[select pk, custAccNum, bankName, accountStatus, totalBalance, atmPin, wrongPin, mailId from bank_transactions where custAccNum = :accountNum and bankName = :bank;
+]]></db:sql>
+			<db:input-parameters><![CDATA[#[{
+	accountNum: vars.atmTrans.accountNum,
+	bank: vars.atmQpar.bank
+}]]]></db:input-parameters>
+		</db:select>
+			<error-handler >
+				<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="640f45c4-ff1c-4bd4-86aa-2183c0374c78" >
+					<ee:transform doc:name="Transform Message" doc:id="6c9e04f5-3ae0-4dd1-99e2-b1912476a746" >
+						<ee:message >
+							<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+error.description]]></ee:set-payload>
+						</ee:message>
+					</ee:transform>
+				</on-error-propagate>
+			</error-handler>
+		</try>
+		<ee:transform doc:name="Transform Message" doc:id="b3753bf4-9af2-400d-b5d0-30a144cb79d9" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="hab" ><![CDATA[%dw 2.0
+output application/java
+---
+payload]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+	</flow>
+</mule>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:email="http://www.mulesoft.org/schema/mule/email" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd">
+	<sub-flow name="unblockSub_Flow" doc:id="f590ac55-6814-4af7-ab73-e04f21d273d1" >
+		<ee:transform doc:name="Transform Message" doc:id="6354c928-a298-4563-9531-4621a7a8e5e0" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+payload]]></ee:set-payload>
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="tew" ><![CDATA[%dw 2.0
+output application/java
+---
+payload]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<flow-ref doc:name="Flow Reference" doc:id="54664aff-adba-46df-9a71-d35a935bbd44" name="select-payloadFlow"/>
+		<ee:transform doc:name="Transform Message" doc:id="cf59c194-14e4-43c9-8431-d44e490075d9" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+if(vars.tew.user == "admin" and vars.tew.password == "admin" and payload != []) payload.accountStatus[0]
+else "Account " ++ vars.tew.accountNum ++ " does not exist. Enter Valid Details"
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<choice doc:name="Choice" doc:id="59cf4ba8-0e49-45fd-b447-1d05cfd3cd70" >
+			<when expression='#[payload == "Blocked"]'>
+				<try doc:name="Try" doc:id="ac1f2113-7985-4685-a10f-faf2c39ec658" >
+					<db:update doc:name="Update" doc:id="4e017037-fd22-4356-987c-4a465af1d209" config-ref="Database_Config">
+					<db:sql><![CDATA[update bank_transactions set wrongPin=0, accountStatus='Active' where pk=:pk;
+]]></db:sql>
+					<db:input-parameters><![CDATA[#[{
+	pk: vars.unb.pk[0]
+}]]]></db:input-parameters>
+				</db:update>
+					<error-handler >
+						<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="82002f68-9f33-4a97-a60b-34bcfe6779a8" >
+							<ee:transform doc:name="Transform Message" doc:id="a0ab99a2-f7f5-4e6c-859a-7b14cee7834e" >
+								<ee:message >
+									<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+error]]></ee:set-payload>
+								</ee:message>
+							</ee:transform>
+						</on-error-propagate>
+					</error-handler>
+				</try>
+				<ee:transform doc:name="Transform Message" doc:id="799baa9e-9022-4a5c-a6ee-094d12847b5c" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+"Account 1234567890 is Unblocked."
+]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<email:send doc:name="Send" doc:id="a1b761a5-587d-4ff9-b869-71a5c75ef8be" fromAddress="kemhabona@gmail.com" subject="Account Unblocked!" config-ref="Email_SMTP">
+					<email:to-addresses >
+						<email:to-address value="#[vars.unb.mailId[0]]" />
+					</email:to-addresses>
+					<email:body contentType="text/plain">
+						<email:content ><![CDATA[This is to inform you that Your Account has been unblocked]]></email:content>
+					</email:body>
+				</email:send>
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Transform Message" doc:id="1391dc7f-cff1-4f38-9a1a-130a4990ec16" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+if(payload == "Active")  "Account " ++ vars.tew.accountNum ++ " is Active."
+else payload
+]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</otherwise>
+		</choice>
+	</sub-flow>
+</mule>

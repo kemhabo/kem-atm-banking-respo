@@ -1,0 +1,9 @@
+%dw 2.0
+
+type auto_dc00cb66_f3cc_44c1_9adc_f5473505b26b_Input_Variables_atmQpar = {|
+  customerName: String, 
+  bank: String, 
+  "type": "current" | "savings", 
+  branchName: String
+|}
+

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="select-payload-suite.xml" />
+	<munit:test name="select-payloadFlow-testSuccess" doc:id="42b90f99-9b07-44f2-a7cb-56a5fca4261b" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Select" doc:id="a756c61e-2dbb-412c-b48b-b1567e1fdcbe" processor="db:select">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="3f7f0374-36ae-416d-92e2-689602ff08ae" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/java --- readUrl('classpath://selectpayloadFlowtestSuccess\mock_payload.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://selectpayloadFlowtestSuccess\mock_variable_.dwl')]" />
+						<munit-tools:variable key="tew" value="#[output application/java --- readUrl('classpath://selectpayloadFlowtestSuccess\mock_variable_1.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="3dabacfe-ed6e-4360-9d5f-b240d58e5550" >
+				<munit:payload value="#[output application/java --- readUrl('classpath://selectpayloadFlowtestSuccess\set-event_payload.dwl')]" encoding="UTF-8" mediaType="application/java" />
+				<munit:attributes value="#[readUrl('classpath://selectpayloadFlowtestSuccess\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://selectpayloadFlowtestSuccess\set-event_variable_.dwl')]" />
+					<munit:variable key="tew" value="#[output application/java --- readUrl('classpath://selectpayloadFlowtestSuccess\set-event_variable_1.dwl')]" encoding="UTF-8" mediaType="application/java" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to select-payloadFlow" doc:id="c02a7343-4590-4791-bb9a-ce35c63b1ac0" name="select-payloadFlow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="342ae380-0272-4ee2-a047-83c507ff5649" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import selectpayloadFlowtestSuccess::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+
+	<munit:test name="select-payloadFlow-testError" doc:id="42b90f99-9b07-44f2-a7cb-56a5fca4261b" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Select" doc:id="a756c61e-2dbb-412c-b48b-b1567e1fdcbe" processor="db:select">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="3f7f0374-36ae-416d-92e2-689602ff08ae" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					
+					<munit-tools:error typeId="ANY" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://selectpayloadFlowtestSuccess\mock_variable_.dwl')]" />
+						<munit-tools:variable key="tew" value="#[output application/java --- readUrl('classpath://selectpayloadFlowtestSuccess\mock_variable_1.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			
+</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="3dabacfe-ed6e-4360-9d5f-b240d58e5550" >
+				<munit:payload value="#[output application/java --- readUrl('classpath://selectpayloadFlowtestSuccess\set-event_payload.dwl')]" encoding="UTF-8" mediaType="application/java" />
+				<munit:attributes value="#[readUrl('classpath://selectpayloadFlowtestSuccess\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://selectpayloadFlowtestSuccess\set-event_variable_.dwl')]" />
+					<munit:variable key="tew" value="#[output application/java --- readUrl('classpath://selectpayloadFlowtestSuccess\set-event_variable_1.dwl')]" encoding="UTF-8" mediaType="application/java" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution>
+			<try doc:name="Try" doc:id="64766456-29ba-4cae-acd9-a8d19153bba7" >
+				<flow-ref doc:name="Flow-ref to select-payloadFlow" doc:id="c02a7343-4590-4791-bb9a-ce35c63b1ac0" name="select-payloadFlow" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="4a500ede-8fb3-42e6-98e7-afdaa505f3c8" >
+						<logger level="INFO" doc:name="Logger" doc:id="8e066420-e32b-490d-b17d-b3d46d2c775e" message="****abc***"/>
+					</on-error-continue>
+				</error-handler>
+			</try>
+
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that doc:name="Assert that" doc:id="23e60816-6258-4437-995e-e756f4a8f589" is="#[MunitTools::equalTo(error.description)]" expression="#[error]"/>
+
+		</munit:validation>
+	
+</munit:test>
+
+</mule>

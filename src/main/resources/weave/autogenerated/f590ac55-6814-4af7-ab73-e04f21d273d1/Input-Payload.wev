@@ -1,0 +1,10 @@
+%dw 2.0
+
+type auto_f590ac55_6814_4af7_ab73_e04f21d273d1_Input_Payload = {
+  password: String, 
+  bank: "AXIS", 
+  accountNum: String, 
+  user: String, 
+  _?: Any
+}
+

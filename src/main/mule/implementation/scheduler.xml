@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:email="http://www.mulesoft.org/schema/mule/email" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd">
+	<flow name="schedulerFlow" doc:id="7440b43f-ccd5-4f52-91bc-c39c3594f17a" >
+		<scheduler doc:name="Scheduler" doc:id="014afc45-f5a5-4d3a-ab8d-900487b02315" >
+			<scheduling-strategy >
+				<cron expression="0 0 19 * * ?" timeZone="EST" />
+			
+</scheduling-strategy>
+		</scheduler>
+		<flow-ref doc:name="select-_all-detFlow Reference" doc:id="2dbc5ff6-174a-491d-9ee6-82ee5ef970fe" name="select-_all-detFlow"/>
+		<logger level="INFO" doc:name="Logger" doc:id="a8ec9b2b-444e-41d1-99f1-0f390965ec4f" message="#[payload]"/>
+		<ee:transform doc:name="Transform Message" doc:id="0a0172e4-4bdc-4223-8f64-26b38f8fe1c4" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload map ((balance, index) -> {
+    totalBalance: balance.totalBalance,
+    mailId: balance.mailId
+}
+)
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<foreach doc:name="For Each" doc:id="d6934de7-b08b-426e-baf6-0fcffdaa826b">
+			<try doc:name="Try" doc:id="fd416213-ae31-41b0-a260-efd842b77467" >
+				<email:send doc:name="Send" doc:id="0255e10b-937b-49e3-9a12-9f10b467644b" fromAddress="kemhabona@gmail.com" subject="Today's Total Balance" config-ref="Email_SMTP">
+					<email:to-addresses >
+						<email:to-address value="#[payload.mailId]" />
+					</email:to-addresses>
+					<email:body contentType="text/plain" >
+						<email:content ><![CDATA[#["Your total Balance as on Today is " ++ payload.totalBalance]]]></email:content>
+					</email:body>
+				</email:send>
+				<error-handler >
+					<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="2851cd68-53a9-4d1b-860d-a3acd71e5b12" >
+						<ee:transform doc:name="Transform Message" doc:id="e4328dea-ff50-40ca-9eda-66dddfc70dca" >
+							<ee:message >
+								<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+error]]></ee:set-payload>
+							</ee:message>
+						</ee:transform>
+					</on-error-propagate>
+				</error-handler>
+			</try>
+		
+</foreach>
+	</flow>
+</mule>

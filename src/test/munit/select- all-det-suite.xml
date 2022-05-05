@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="select- all-det-suite.xml" />
+	<munit:test name="select-_all-detFlow-testSuccess" doc:id="214c277d-2d73-47e9-b394-d8361410e7c3" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Select" doc:id="d53476bc-eaa9-48c2-91ff-0f8304ad9417" processor="db:select">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="a2e2315d-d56b-4b6e-847e-c5bbdf089de6" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/java --- readUrl('classpath://selectalldetFlowtestSuccess\mock_payload.dwl')]" mediaType="application/java" encoding="UTF-8" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="b251096e-8b1d-43ab-800a-7c702c9a8071" >
+				<munit:payload value="#[readUrl('classpath://selectalldetFlowtestSuccess\set-event_payload.dwl')]" />
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to select-_all-detFlow" doc:id="f35a88c1-642a-400d-9205-81daceb49ffd" name="select-_all-detFlow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="06afaa9a-140f-4e05-bf1c-0cc68e7d48dd" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import selectalldetFlowtestSuccess::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+
+
+	<munit:test name="select-_all-detFlow-testError" doc:id="214c277d-2d73-47e9-b394-d8361410e7c3" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Select" doc:id="d53476bc-eaa9-48c2-91ff-0f8304ad9417" processor="db:select">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="a2e2315d-d56b-4b6e-847e-c5bbdf089de6" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					
+					<munit-tools:error typeId="ANY" />
+				</munit-tools:then-return>
+			
+</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="b251096e-8b1d-43ab-800a-7c702c9a8071" >
+				<munit:payload value="#[readUrl('classpath://selectalldetFlowtestSuccess\set-event_payload.dwl')]" />
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution>
+			<try doc:name="Try" doc:id="ab2ea66d-5a93-4af4-9a3c-c6df94afdd0a" >
+				<flow-ref doc:name="Flow-ref to select-_all-detFlow" doc:id="f35a88c1-642a-400d-9205-81daceb49ffd" name="select-_all-detFlow" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="3b00776d-e4d6-4561-a75f-ba5a0f20cba8" >
+						<logger level="INFO" doc:name="Logger" doc:id="29e1c90e-3fc5-4426-8c6a-42064db21b17" message="****cav****"/>
+					</on-error-continue>
+				</error-handler>
+			</try>
+
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that doc:name="Assert that" doc:id="e1fece4e-143d-4377-a3b6-44993bb53402" is="#[MunitTools::equalTo(error.description)]" expression="#[error]"/>
+
+		</munit:validation>
+	
+</munit:test>
+</mule>

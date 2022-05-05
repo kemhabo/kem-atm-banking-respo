@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="select-payloadFlow" doc:id="d1f28175-52d9-4eaf-97dd-355af4b4d09b" >
+		<try doc:name="Try" doc:id="c9f5d99b-ccef-46de-bed0-f7bccfc30fd1" >
+			<db:select doc:name="Select" doc:id="3f7f0374-36ae-416d-92e2-689602ff08ae" config-ref="Database_Config">
+			<db:sql><![CDATA[select pk, custAccNum, bankName, accountStatus, totalBalance, atmPin, wrongPin, mailId from bank_transactions where custAccNum = :accountNum and bankName = :bank;
+]]></db:sql>
+			<db:input-parameters><![CDATA[#[{
+	accountNum: vars.tew.accountNum,
+	bank: vars.tew.bank
+}]]]></db:input-parameters>
+		</db:select>
+			<error-handler >
+				<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="312ecc48-44b7-4da2-93ae-5dd3c331458b" >
+					<ee:transform doc:name="Transform Message" doc:id="5ae563e1-5746-4328-a71e-2047c9975604" >
+						<ee:message >
+							<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+error]]></ee:set-payload>
+						</ee:message>
+					</ee:transform>
+				</on-error-propagate>
+			</error-handler>
+		</try>
+		<ee:transform doc:name="Transform Message" doc:id="75ad5f32-d83f-4a3e-bc88-d64a2425069a" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+payload]]></ee:set-payload>
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="unb" ><![CDATA[%dw 2.0
+output application/java
+---
+payload]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+	</flow>
+</mule>

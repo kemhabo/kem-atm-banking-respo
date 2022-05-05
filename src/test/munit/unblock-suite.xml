@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="unblock-suite.xml" />
+	<munit:test name="unblockSub_Flow-test-Success" doc:id="34087204-737f-4185-a202-c62db02a3345" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Flow Reference" doc:id="004f4f09-231d-4ca3-befe-e2b11a2096c8" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="54664aff-adba-46df-9a71-d35a935bbd44" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/java --- readUrl('classpath://unblockSubFlowtestSuccess\mock_payload.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://unblockSubFlowtestSuccess\mock_variable_.dwl')]" />
+						<munit-tools:variable key="tew" value="#[output application/java --- readUrl('classpath://unblockSubFlowtestSuccess\mock_variable_1.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="unb" value="#[output application/java --- readUrl('classpath://unblockSubFlowtestSuccess\mock_variable_2.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock Update" doc:id="f26a1752-4e2f-4b1a-8ccf-d973f937fa16" processor="db:update">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="4e017037-fd22-4356-987c-4a465af1d209" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/java --- readUrl('classpath://unblockSubFlowtestSuccess\mock_payload1.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://unblockSubFlowtestSuccess\mock_variable_3.dwl')]" />
+						<munit-tools:variable key="tew" value="#[output application/java --- readUrl('classpath://unblockSubFlowtestSuccess\mock_variable_4.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="unb" value="#[output application/java --- readUrl('classpath://unblockSubFlowtestSuccess\mock_variable_5.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock Send" doc:id="c4c7e3d2-7e5a-445b-a618-d609f45472c4" processor="email:send">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="a1b761a5-587d-4ff9-b869-71a5c75ef8be" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/java --- readUrl('classpath://unblockSubFlowtestSuccess\mock_payload2.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://unblockSubFlowtestSuccess\mock_variable_6.dwl')]" />
+						<munit-tools:variable key="tew" value="#[output application/java --- readUrl('classpath://unblockSubFlowtestSuccess\mock_variable_7.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="unb" value="#[output application/java --- readUrl('classpath://unblockSubFlowtestSuccess\mock_variable_8.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="df341b15-86bd-44c0-a0c1-24b05a98af3d" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://unblockSubFlowtestSuccess\set-event_payload.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				<munit:attributes value="#[readUrl('classpath://unblockSubFlowtestSuccess\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://unblockSubFlowtestSuccess\set-event_variable_.dwl')]" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to unblockSub_Flow" doc:id="87908cce-6399-4711-a956-753ecca78725" name="unblockSub_Flow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="3633f841-6ed7-465e-87d4-8a418080e083" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import unblockSubFlowtestSuccess::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="unblockSub_Flow-test-Fail" doc:id="dd36f980-f83f-45e9-b600-77f53e1b1372" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Flow Reference" doc:id="8657486f-73fa-4f64-a95d-855d2267fc29" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="54664aff-adba-46df-9a71-d35a935bbd44" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/java --- readUrl('classpath://unblockSubFlowtestFail\mock_payload.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://unblockSubFlowtestFail\mock_variable_.dwl')]" />
+						<munit-tools:variable key="tew" value="#[output application/java --- readUrl('classpath://unblockSubFlowtestFail\mock_variable_1.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="unb" value="#[output application/java --- readUrl('classpath://unblockSubFlowtestFail\mock_variable_2.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="a3240e90-59de-499c-b4c5-1f7c632eb5fe" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://unblockSubFlowtestFail\set-event_payload.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				<munit:attributes value="#[readUrl('classpath://unblockSubFlowtestFail\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://unblockSubFlowtestFail\set-event_variable_.dwl')]" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to unblockSub_Flow" doc:id="81f566c0-2910-4cf3-ab6e-d87cea2e3d84" name="unblockSub_Flow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="62b18be1-a2dd-4d01-be14-f180c2d2b6b0" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import unblockSubFlowtestFail::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+	
+		<munit:test name="unblockSub_Flow-test-Error" doc:id="34087204-737f-4185-a202-c62db02a3345" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Flow Reference" doc:id="004f4f09-231d-4ca3-befe-e2b11a2096c8" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="54664aff-adba-46df-9a71-d35a935bbd44" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/java --- readUrl('classpath://unblockSubFlowtestSuccess\mock_payload.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://unblockSubFlowtestSuccess\mock_variable_.dwl')]" />
+						<munit-tools:variable key="tew" value="#[output application/java --- readUrl('classpath://unblockSubFlowtestSuccess\mock_variable_1.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="unb" value="#[output application/java --- readUrl('classpath://unblockSubFlowtestSuccess\mock_variable_2.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			
+</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock UpdateError" doc:id="f26a1752-4e2f-4b1a-8ccf-d973f937fa16" processor="db:update">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="4e017037-fd22-4356-987c-4a465af1d209" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="ANY" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://unblockSubFlowtestSuccess\mock_variable_3.dwl')]" />
+						<munit-tools:variable key="tew" value="#[output application/java --- readUrl('classpath://unblockSubFlowtestSuccess\mock_variable_4.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="unb" value="#[output application/java --- readUrl('classpath://unblockSubFlowtestSuccess\mock_variable_5.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			
+</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock Send" doc:id="c4c7e3d2-7e5a-445b-a618-d609f45472c4" processor="email:send">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="a1b761a5-587d-4ff9-b869-71a5c75ef8be" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/java --- readUrl('classpath://unblockSubFlowtestSuccess\mock_payload2.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://unblockSubFlowtestSuccess\mock_variable_6.dwl')]" />
+						<munit-tools:variable key="tew" value="#[output application/java --- readUrl('classpath://unblockSubFlowtestSuccess\mock_variable_7.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="unb" value="#[output application/java --- readUrl('classpath://unblockSubFlowtestSuccess\mock_variable_8.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="df341b15-86bd-44c0-a0c1-24b05a98af3d" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://unblockSubFlowtestSuccess\set-event_payload.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				<munit:attributes value="#[readUrl('classpath://unblockSubFlowtestSuccess\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://unblockSubFlowtestSuccess\set-event_variable_.dwl')]" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution>
+			<try doc:name="Try" doc:id="484af74b-fe81-4573-9acc-874cb69cce9c" >
+				<flow-ref doc:name="Flow-ref to unblockSub_Flow" doc:id="87908cce-6399-4711-a956-753ecca78725" name="unblockSub_Flow" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="993d92d9-ea2c-4ce9-b8f6-62b86efd0e8f" >
+						<logger level="INFO" doc:name="Logger" doc:id="3085d0cc-7462-484b-b09f-7a3278fc465c" message="****continue*****"/>
+					</on-error-continue>
+				</error-handler>
+			</try>
+
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that doc:name="Assert that" doc:id="537cf639-532a-43da-af9f-4dca5eb6e8fb" expression="#[error]" is="#[MunitTools::equalTo(error.description)]"/>
+
+		</munit:validation>
+	
+</munit:test>
+
+
+</mule>

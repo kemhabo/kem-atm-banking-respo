@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="scheduler-test-suite.xml" />
+	<munit:test name="scheduler-test-suite-schedulerFlowTest" doc:id="5fc500da-1a7f-4ea3-b247-2eddeed234ff" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="300ee6c9-d1c9-4ee6-a2b4-76d9e2fb6b70" processor="email:send">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="0255e10b-937b-49e3-9a12-9f10b467644b" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="Email_SMTP" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event" doc:id="504e818e-649a-4305-b18e-0766ed98933f" >
+				<munit:payload value='[&#10;  {&#10;    "totalBalance": 4800.000000000,&#10;    "mailId": "kemhabo@gmail.com"&#10;  },&#10;  {&#10;    "totalBalance": 5000.000000000,&#10;    "mailId": "kemhabo@gmail.com"&#10;  },&#10;  {&#10;    "totalBalance": 12233333.000000000,&#10;    "mailId": "kemhabo@gmail.com"&#10;  }&#10;]' />
+			</munit:set-event>
+			<flow-ref doc:name="Flow-ref to schedulerFlow" doc:id="7c44459f-d8f0-4f92-a727-3ea73299335a" name="schedulerFlow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="d67d6d9a-1839-45e7-bbbd-5df40aab229c" actual='#[{&#10;  "totalBalance": 4800.000000000,&#10;  "mailId": "kemhabo@gmail.com"&#10;}]' expected='#[{&#10;  "totalBalance": 4800.000000000,&#10;  "mailId": "kemhabo@gmail.com"&#10;}]' message="responce payload not exist"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="scheduler-test-suite-schedulerFlowError" doc:id="0e6ced45-389c-4a18-834d-f7bfb7f93485" description="Test">
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when" doc:id="77512776-a2e0-4155-a5c5-b699d67c8231" processor="email:send">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="0255e10b-937b-49e3-9a12-9f10b467644b" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value='#[[&#10;  {&#10;    "atmPin": "1234",&#10;    "accountType": "savings",&#10;    "phoneNumber": "1252567890",&#10;    "ifscCode": "1234",&#10;    "wrongPin": 2,&#10;    "accountStatus": "Active",&#10;    "custAccNum": "1334567833",&#10;    "mailId": "kemhabo",&#10;    "pk": 0,&#10;    "bankName": "ICICI",&#10;    "transactionTimeStamp": "2022-01-28-03:9:14",&#10;    "totalBalance": 4800.000000000,&#10;    "custName": "kemal",&#10;    "branchName": "D.C Branch"&#10;  }]]' mediaType="application/java" encoding="UTF-8" />
+					<munit-tools:error typeId="ANY" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<set-payload value='#[[&#10;  {&#10;    "atmPin": "1234",&#10;    "accountType": "savings",&#10;    "phoneNumber": "1252567890",&#10;    "ifscCode": "1234",&#10;    "wrongPin": 2,&#10;    "accountStatus": "Active",&#10;    "custAccNum": "1334567833",&#10;    "mailId": "kemhabo",&#10;    "pk": 0,&#10;    "bankName": "ICICI",&#10;    "transactionTimeStamp": "2022-01-28-03:9:14",&#10;    "totalBalance": 4800.000000000,&#10;    "custName": "kemal",&#10;    "branchName": "D.C Branch"&#10;  }]]' doc:name="Set Payload" doc:id="3ee4358c-4bb2-4545-a941-39bdd669a694" />
+		</munit:behavior>
+		<munit:execution >
+			<try doc:name="Try" doc:id="e359a1dd-4e10-42ff-810b-790dc0b6001d" >
+				<flow-ref doc:name="Flow-ref to schedulerFlow" doc:id="5bb93679-026e-459b-880d-e0479ec0fe46" name="schedulerFlow" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="775cce21-d232-45de-afbc-8aca4bb90858" >
+						<logger level="INFO" doc:name="Logger" doc:id="a3ba473f-96c7-4646-96e1-ff485a44b514" message="#[payload]"/>
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="4a27552f-3451-4617-a97e-a13820a43e2f" expression="#[error]" is='#[MunitTools::equalTo(error.description)]'/>
+		</munit:validation>
+	</munit:test>
+
+
+</mule>

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:s3="http://www.mulesoft.org/schema/mule/s3" xmlns:email="http://www.mulesoft.org/schema/mule/email"
+	xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
+http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd
+http://www.mulesoft.org/schema/mule/s3 http://www.mulesoft.org/schema/mule/s3/current/mule-s3.xsd">
+	<sub-flow name="withDrawSub_Flow" doc:id="370cb9e1-51d5-47de-a430-feb50b8f8736" >
+		<ee:transform doc:name="Transform Message" doc:id="72c144b8-6659-4072-a967-bc97ecec6ef9">
+			<ee:message>
+			</ee:message>
+			<ee:variables>
+				<ee:set-variable variableName="atmQpar"><![CDATA[%dw 2.0
+output application/json
+---
+attributes.queryParams]]></ee:set-variable>
+				<ee:set-variable variableName="atmTrans"><![CDATA[%dw 2.0
+output application/java
+---
+payload]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<flow-ref doc:name="Flow Reference" doc:id="14821792-e1c3-48b4-b22f-63a828d881d0" name="checkBalanceSub_Flow"/>
+		<ee:transform doc:name="Transform Message" doc:id="4228142f-9ad8-4485-9688-f5ebbe04c483" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+if(vars.hab == []) payload
+else if(payload != [] and vars.hab.accountStatus[0] == "Active" and vars.hab.atmPin[0] == vars.atmTrans.atmPin and vars.hab.totalBalance[0] > vars.atmTrans.amountToBeWithDraw) vars.hab.totalBalance[0]
+else if(vars.hab.totalBalance[0] < vars.atmTrans.amountToBeWithDraw) "Insufficient Fund" 
+else payload
+
+
+]]></ee:set-payload>
+			</ee:message>
+			<ee:variables >
+			</ee:variables>
+		</ee:transform>
+		<choice doc:name="Choice" doc:id="c6559bd3-beb8-4a61-86db-7b9fe52c1658" >
+			<when expression="#[payload == vars.hab.totalBalance[0]]">
+				<ee:transform doc:name="Transform Message" doc:id="88a61176-eb42-4da8-a1a2-b05e22fd83aa">
+							<ee:message>
+							</ee:message>
+					<ee:variables>
+						<ee:set-variable variableName="idr" ><![CDATA[%dw 2.0
+output application/java
+---
+payload - vars.atmTrans.amountToBeWithDraw]]></ee:set-variable>
+					</ee:variables>
+						</ee:transform>
+				<try doc:name="Try" doc:id="f36085c3-e1d0-4005-a910-594ac3bee408" >
+					<db:update doc:name="Update" doc:id="60799416-e675-4bc1-ae4b-fe39449f7791" config-ref="Database_Config">
+							<db:sql><![CDATA[update bank_transactions set totalBalance=:totalBalance where pk=:pk;
+]]></db:sql>
+					<db:input-parameters><![CDATA[#[{
+	pk: vars.hab.pk[0],
+	totalBalance: vars.idr
+}]]]></db:input-parameters>
+						</db:update>
+					<error-handler >
+						<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="6579f1cc-a0e6-46da-9cf2-4fae8d053c6a" type="ANY">
+							<ee:transform doc:name="Transform Message" doc:id="c27abd11-225c-4558-abdb-f8f156c5798a" >
+								<ee:message >
+									<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+error]]></ee:set-payload>
+								</ee:message>
+							</ee:transform>
+						</on-error-propagate>
+					</error-handler>
+				</try>
+				<ee:transform doc:name="Transform Message" doc:id="086e5a21-b260-43a5-a858-369be319337b">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+"This is to inform you that Your Account has been debited with " ++ vars.atmTrans.amountToBeWithDraw ++ " amount and your Total Balance is " ++ vars.idr]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<email:send doc:name="Send" doc:id="0d7e371c-86be-4de2-b1f8-082c8f0bafcb" fromAddress="kemhabona@gmail.com" subject="Transaction Alert!" config-ref="Email_SMTP">
+					<email:to-addresses>
+						<email:to-address value="#[vars.hab.mailId[0]]" />
+					</email:to-addresses>
+					<email:body contentType="text/plain" />
+				</email:send>
+				<ee:transform doc:name="Transform Message" doc:id="5fd55284-6f73-43a6-a8e8-c8f379ab6b8a">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+   status: 200,
+   message: "Amount " ++ vars.atmTrans.amountToBeWithDraw ++ " is debited. Your total balance is " ++ vars.idr as Number
+}
+
+		
+]]></ee:set-payload>
+					</ee:message>
+					<ee:variables>
+					</ee:variables>
+				</ee:transform>
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Transform Message" doc:id="e6940359-59b1-4b4b-a2e2-d74f6a62cbc6">
+							<ee:message>
+								<ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+if(payload == "Insufficient Fund.") "Insufficient Fund."
+else payload
+]]></ee:set-payload>
+							</ee:message>
+						</ee:transform>
+			</otherwise>
+		</choice>
+	</sub-flow>
+</mule>

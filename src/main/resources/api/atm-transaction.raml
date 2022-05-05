@@ -1,0 +1,200 @@
+#%RAML 1.0
+title: ATM Transaction
+version: 1.0
+types:
+  checkOne: !include dataType/checkBalancedataType.raml
+  createOne: !include dataType/createAccountdataType.raml
+  unblockOne: !include dataType/unblockDatatype.raml
+  withDrawOne: !include dataType/withDrawdataType.raml
+
+  
+
+/createAccount:
+  post:
+    queryParameters:
+      customerName:
+        description: The customerName's in Full name 
+        type: string
+        required: true
+        maxLength: 45
+        minLength: 4
+        example: Kemal Habona
+      bank:
+        enum:
+        - ICICI
+        - AXIS
+        - HDFC
+      type:
+        enum: 
+        - savings
+        - current
+      branchName:  
+        type: string
+        required: true
+        maxLength: 10
+        minLength: 4
+    body:
+      application/json:
+        type: createOne
+        example:
+          { "accountNum": "1234567890",
+            "atmPin": "1234",
+            "ifscCode": "1234",
+            "depositAmount": 12.23,
+            "mailId": "123155",
+            "contact": "1252567890"
+          }
+
+    responses:
+      201:
+        body:
+          application/json:
+            type: object
+            example: {"status": "201",
+           "message": "Account Created Successfully with Account Number 1234567890"
+          }
+      400:
+        body:
+          application/json:
+            type: object
+            example: {"Bad Request"}
+      404:
+        body:
+          application/json:
+            type: object
+            example: {"status": "404",
+            "message": "resource not found"}
+      500:
+        body:
+          application/json:
+            type: object
+            example: {"status": "500",
+           "message": "Internal Server Error"}
+/checkBalance:
+  post:
+    queryParameters:
+      bank:
+        enum: 
+        - ICICI
+        - AXIS
+        - HDFC 
+      type:
+        enum: 
+        - savings
+        - current
+    body:
+      application/json:
+        type: checkOne
+        example:
+          { "accountNum": "1234512345",
+            "atmPin": "1234"
+          }
+    responses:
+      201:
+        body:
+          application/json:
+            example:
+              {
+                "status": "200",
+                "message":"Your total balance is 12354.01 as on  20-May-2020"}
+      400:
+        body:
+          application/json:
+            type: object
+            example: {"Bad Request"}
+      404:
+        body:
+          application/json:
+            type: object
+            example: {"status": "404",
+            "message": "resource not found"}
+      500:
+        body:
+          application/json:
+            type: object
+            example: {"status": "500",
+           "message": "Internal Server Error"}
+/withDraw:
+  post:
+    queryParameters:
+      bank:
+        enum: 
+        - ICICI
+        - AXIS
+        - HDFC
+      type:
+        enum: 
+        - savings
+        - current
+    body:
+      application/json:
+        type: withDrawOne
+        example: 
+          {
+           "accountNum": "1234512345",
+           "atmPin": "1234",
+           "amountToBeWithDraw": 123.02}
+    responses:
+      200:
+        body:
+          application/json:
+            example:
+              {
+                "status": 200,"message": "Amount 2123.02 is debited. Your total balance is 4000.23"}
+      400:
+        body:
+          application/json:
+            type: object
+            example: {"Bad Request"}
+      404:
+        body:
+          application/json:
+            type: object
+            example: {"status": "404",
+            "message": "resource not found"}
+      500:
+        body:
+          application/json:
+            type: object
+            example: {"status": "500",
+           "message": "Internal Server Error"}
+/unblock:
+  put:
+    body:
+      application/json:
+        type: unblockOne
+        example:
+          {
+            "user": "admin",
+            "password": "admin",
+            "accountNum": "1234554321",
+            "bank": "ICICI"
+          }
+    responses:
+      200:
+        body:
+          application/json:
+            type: object
+            example:
+              {
+                "status": 200,
+                "message": "Account 3166645435 is unblocked"
+              }
+      400:
+        body:
+          application/json:
+            type: object
+            example: {"Bad Request"}
+      404:
+        body:
+          application/json:
+            type: object
+            example: {"status": "404",
+            "message": "resource not found"}
+      500:
+        body:
+          application/json:
+            type: object
+            example: {"status": "500",
+           "message": "Internal Server Error"}
+  

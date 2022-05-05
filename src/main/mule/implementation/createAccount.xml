@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:s3="http://www.mulesoft.org/schema/mule/s3" xmlns:email="http://www.mulesoft.org/schema/mule/email"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd
+http://www.mulesoft.org/schema/mule/s3 http://www.mulesoft.org/schema/mule/s3/current/mule-s3.xsd">
+	<sub-flow name="createAccountSub_Flow" doc:id="0be06a71-ae3c-4704-bb1d-d6811bf5b9b8" >
+		<ee:transform doc:name="Transform Message" doc:id="23cc4fa5-cdb9-4415-a677-53c0eb82327d" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="atmQpar" ><![CDATA[%dw 2.0
+output application/json
+---
+attributes.queryParams]]></ee:set-variable>
+				<ee:set-variable variableName="atmTrans" ><![CDATA[%dw 2.0
+output application/json
+---
+payload
+]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<flow-ref doc:name="Flow Reference" doc:id="d698afd2-58b1-49ce-ba73-f74b00daf361" name="select-parmFlow"/>
+		<ee:transform doc:name="Transform Message" doc:id="d3aadaa2-ea4d-45d7-8475-2e8937b70bb8" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="hab" ><![CDATA[%dw 2.0
+output application/java
+---
+payload]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<choice doc:name="Choice" doc:id="a6fe094e-0d22-4e17-8d23-13b55163aa17" >
+			<when expression="#[payload == []]" doc:id="de14a29b-2578-49a4-8e79-4f0c3f345a8d">
+				<try doc:name="Try" doc:id="85e136ae-f0a0-4d42-a2d6-df84c8f6a954" >
+					<db:insert doc:name="Insert" doc:id="a65a0ebf-1ec4-456f-81d4-0fd7cf1642cd" config-ref="Database_Config">
+					<db:sql><![CDATA[insert into bank_transactions (custName, custAccNum, atmPin, bankName, accountType, ifscCode, branchName, totalBalance, transactionTimeStamp, mailId, phoneNumber)
+values (:custName, :custAccNum, :atmPin, :bankName, :accountType, :ifscCode, :branchName, :totalBalance, :transactionTimeStamp, :mailId, :phoneNumber)
+]]></db:sql>
+					<db:input-parameters><![CDATA[#[{
+	custName: vars.atmQpar.customerName,
+    custAccNum: vars.atmTrans.accountNum,
+    atmPin: vars.atmTrans.atmPin,
+    bankName: vars.atmQpar.bank,
+    accountType: vars.atmQpar."type",
+    ifscCode: vars.atmTrans.ifscCode,
+    branchName: vars.atmQpar.branchName,
+    totalBalance: vars.atmTrans.depositAmount default "",
+    transactionTimeStamp: now() as String {format: "y-MM-dd-hh:m:s"},
+    mailId: vars.atmTrans.mailId,
+    phoneNumber: vars.atmTrans.contact
+}]]]></db:input-parameters>
+				</db:insert>
+					<error-handler >
+						<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="9d289ec0-6009-4428-91b9-cb5cd679a5db" >
+							<ee:transform doc:name="Transform Message" doc:id="03c9830f-c5ae-4560-8f4c-55e72ee57f64" >
+								<ee:message >
+									<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+error]]></ee:set-payload>
+								</ee:message>
+							</ee:transform>
+						</on-error-propagate>
+					</error-handler>
+				</try>
+				<email:send doc:name="Send" doc:id="edf34528-5726-46df-b2e2-5bd0f48adfd4" fromAddress="kemhabona@gmail.com" subject="Account Created" config-ref="Email_SMTP">
+					<email:to-addresses >
+						<email:to-address value="#[vars.atmTrans.mailId]" />
+					</email:to-addresses>
+					<email:body contentType="text/plain" >
+						<email:content ><![CDATA[#["Congratulations ! Your account is created Successfully with Account Number " ++ vars.atmTrans.accountNum ++ " with " ++ vars.atmQpar.bank ++ "."]]]></email:content>
+					</email:body>
+				</email:send>
+				<flow-ref doc:name="Flow Reference" doc:id="79d09744-2d48-4617-b4df-ea3bac2bf547" name="select-_all-detFlow"/>
+				<s3:create-object doc:name="Create object" doc:id="fb60bca6-20e4-490a-bbc8-fd09d9981ffb" config-ref="Amazon_S3_Configuration" bucketName="kimba" key='#["AccountNumber_AccountHolderName" ++ ".json"]' acl="PUBLIC_READ">
+					<s3:object-content ><![CDATA[#[%dw 2.0
+output application/json
+---
+payload]]]></s3:object-content>
+				</s3:create-object>
+				<ee:transform doc:name="Transform Message" doc:id="4f78d08b-cb87-49f0-ac05-534698f4fd01">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  status: 201,
+  message: "Account Created Successfully with Account Number " ++ vars.atmTrans.accountNum as String ++ "." 
+}
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Transform Message" doc:id="a1771de9-0172-44f5-bc8f-97fc0b8febe2" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	message: "Account " ++ payload[0].custAccNum as String ++ " already exist"
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</otherwise>
+		</choice>
+	</sub-flow>
+</mule>
